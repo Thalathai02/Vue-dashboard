@@ -5,7 +5,7 @@
       <img src="@/assets/logo.png" v-show="isDarkMode" />
       <img src="@/assets/logo.png" v-show="!isDarkMode" />
       <h4 :class="{'light-text': isDarkmode,
-      'dark-text':!isDarkmode}">Sign in MyVue</h4>
+      'dark-text':!isDarkmode}">Recover Account</h4>
       <input
         type="email"
         placeholder="Email"
@@ -38,10 +38,7 @@ export default {
   },
   data() {
     return {
-      email: null,
-      password: null,
-      hasText: false,
-      text: ""
+      email: null
     };
   },
   computed: {
@@ -67,14 +64,6 @@ export default {
         .catch(error => {
           alert("Error: " + error);
         });
-    }
-  },
-  mounted() {
-    const params = this.$route.params;
-
-    if (params.userLoggedOut) {
-      this.hasText = true;
-      this.text = "You have logged out!";
     }
   }
 };

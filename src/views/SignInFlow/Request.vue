@@ -5,8 +5,7 @@
       <img src="@/assets/logo.png" v-show="isDarkMode" />
       <img src="@/assets/logo.png" v-show="!isDarkMode" />
       <h4 :class="{'light-text': isDarkmode,
-      'dark-text':!isDarkmode}">Sign in MyVue</h4>
-      <Notification v-if="hasText" :text="text" />
+      'dark-text':!isDarkmode}">Request Account</h4>
       <input
         type="email"
         placeholder="Email"
@@ -14,43 +13,29 @@
         v-model="email"
         required
       />
-      <input
-        type="password"
-        placeholder="Password"
-        :class="{'light-field':isDarkmode, 'dark-field':!isDarkmode}"
-        v-model="password"
-        required
-      />
-      <button v-on:click="onSubmit">Sign In</button>
+
+      <button v-on:click="onSubmit">Request Email</button>
 
       <router-link
-        to="/Recover"
+        to="/SignIn"
         :class="{'light-link':isDarkmode, 'dark-link':!isDarkmode}"
-      >Forget your password</router-link>
+      >Already have an account? Sign in now.</router-link>
       <ThemeSwitch />
     </div>
   </div>
 </template>
 
 <script>
-import RequestAccount from "@/components/RequestAccount.vue";
 import ThemeSwitch from "@/components/ThemeSwitch.vue";
-import { auth } from "@/main";
-import Notification from "@/components/Notification.vue";
 
 export default {
-  name: "Request",
+  name: "Recover",
   components: {
-    RequestAccount,
-    ThemeSwitch,
-    Notification
+    ThemeSwitch
   },
   data() {
     return {
-      email: null,
-      password: null,
-      hasText: false,
-      text: ""
+      email: null
     };
   },
   computed: {
@@ -59,30 +44,30 @@ export default {
     }
   },
   methods: {
-    toggleDarkMode() {
-      this.$store.commit("toggleDarkMode");
-    },
     onSubmit() {
       const email = this.email;
-      const password = this.password;
+      let slackURL = new URL("https://slack.com/api/chat.postMessage");
+      const data = {
+        token: "xoxb-1039994723282-1050675299636-v3B8jizxvlQjvnx9v8SR0pW3",
+        channel: "vue_account",
+        text: `${email} has requested admin access to HQ. Please go to Netlify to invite them.`
+      };
 
-      auth
-        .login(email, password,true)
-        .then(response => {
-          this.$router.replace("/");
-          response;
+      slackURL.search = new URLSearchParams(data);
+
+      fetch(slackURL)
+        .then(() => {
+          this.$router.push({
+            name: "SignIn",
+            params: {
+              userRequestedAccount: true,
+              email: email
+            }
+          });
         })
         .catch(error => {
-          alert(error);
+          alert("Error: " + error);
         });
-    }
-  },
-  mounted() {
-    const params = this.$route.params;
-
-    if (params.userLoggedOut) {
-      this.hasText = true;
-      this.text = "You have logged out!";
     }
   }
 };
