@@ -17,6 +17,11 @@ export default {
   components: {
     HelloWorld,
     Header
+  },
+  computed: {
+    isDarkmode() {
+      return this.$store.getters.isDarkMode;
+    }
   }
 };
 </script>

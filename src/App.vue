@@ -19,7 +19,7 @@ export default {
 
 };
 </script>
-<style lang="scss">
+<style lang="scss" >
 @import "@/global-styles/color.scss";
 @import "@/global-styles/Typography.scss";
 
@@ -35,7 +35,7 @@ h1 {
   @include Heading-1;
 }
 p {
-  @include large-text($Green);
+  @include large-text(black);
 }
 
 #app {

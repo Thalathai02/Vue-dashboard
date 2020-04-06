@@ -80,8 +80,8 @@ export default {
   components: {
     Header
   },
-  computed: {
-   isDarkMode() {
+ computed: {
+    isDarkMode() {
       return this.$store.getters.isDarkMode;
     }
   }
