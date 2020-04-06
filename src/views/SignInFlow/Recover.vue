@@ -51,7 +51,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      
       const email = this.email;
 
       auth
