@@ -59,9 +59,6 @@ export default {
     }
   },
   methods: {
-    toggleDarkMode() {
-      this.$store.commit("toggleDarkMode");
-    },
     onSubmit() {
       const email = this.email;
       const password = this.password;
@@ -83,6 +80,14 @@ export default {
     if (params.userLoggedOut) {
       this.hasText = true;
       this.text = "You have logged out!";
+    } else if (params.userRecoveredAccount) {
+      this.hasText = true;
+      this.text = `A recovery email has been sent to ${params.email}`;
+    } else if (params.userRequestedAccount) {
+      this.hasText = true;
+      this.text = `Your request has been sent to an administator for ${
+        params.email
+      }`;
     }
   }
 };
@@ -106,6 +111,7 @@ export default {
 .light-field {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
   &::placeholder {
     color: rgba(255, 255, 255, 0.3);
   }
@@ -113,6 +119,7 @@ export default {
 .dark-field {
   background: rgba(198, 208, 235, 0.2);
   border: 1px solid rgba(0, 0, 0, 0.2);
+  color: black;
   &::placeholder {
     color: rgba(0, 0, 0, 0.2);
   }

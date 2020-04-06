@@ -1,6 +1,6 @@
 <template>
   <transition enter-active-class="animated fadeInDown" leave-active-class="animated fadeOutRight">
-    <div v-show="show" class="bubble">
+    <div v-show="show" class="bubble" :class="container">
       <div class="message">{{text}}</div>
     </div>
   </transition>
