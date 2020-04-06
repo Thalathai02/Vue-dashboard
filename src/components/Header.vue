@@ -1,7 +1,14 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link>|
-    <router-link to="/Team">About</router-link>|
+  <div id="nav" :class="{'nav-light' : !isDarkMode, 'nav-dark' : isDarkMode}">
+    <div class="nav-1">
+      <img src="@/assets/DCHQ-small.svg">
+      <router-link to="/" :class="{'light-nav' : !isDarkMode, 'dark-nav' : isDarkMode}">Home</router-link>
+      <router-link
+        to="/manage"
+        :class="{'light-nav' : !isDarkMode, 'dark-nav' : isDarkMode}"
+      >Manage Users</router-link>
+      <router-link to="/team" :class="{'light-nav' : !isDarkMode, 'dark-nav' : isDarkMode}">Team</router-link>
+    </div>
     <a @click="onClick">
       Logout
       <img src="@/assets/logout.svg">
@@ -38,3 +45,62 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+@import "@/global-styles/color.scss";
+@import "@/global-styles/Typography.scss";
+.nav-light {
+  background: #f0f3f5;
+  box-shadow: 1px 3px 20px 4px #c6d0eb59;
+}
+
+.nav-dark {
+  background: $super-dark-blue;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+#nav {
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px 15%;
+
+  a {
+    font-weight: bold;
+    color: $dark-gray;
+    &.router-link-exact-active.dark-nav {
+      color: $White;
+    }
+    &.router-link-exact-active.light-nav {
+      color: $green;
+    }
+  }
+
+  a,
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.nav-1 {
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: 20px;
+    margin-right: 20px;
+    @media all and (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  img {
+    margin-right: 20px;
+  }
+}
+</style>

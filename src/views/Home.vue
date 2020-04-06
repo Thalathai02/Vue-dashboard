@@ -18,7 +18,7 @@ export default {
     HelloWorld,
     Header
   },
-  computed: {
+ computed: {
     isDarkmode() {
       return this.$store.getters.isDarkMode;
     }

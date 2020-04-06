@@ -1,6 +1,6 @@
 <template>
-<div class="manage">
-    <Header/>
+  <div class="manage">
+    <Header />
     <div class="container">
       <h1 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Team</h1>
       <div class="cards">
@@ -10,10 +10,10 @@
               src="@/assets/slack.png"
               class="card-header"
               :class="{'light-header' : !isDarkMode, 'dark-header' : isDarkMode}"
-            >
+            />
             <h3 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Slack</h3>
             <p
-              :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}"
+              :class="{'light' : isDarkMode, 'dark' : !isDarkMode}"
             >Messaging app for all team communication.</p>
           </a>
         </transition>
@@ -23,9 +23,9 @@
               src="@/assets/notion.png"
               class="card-header"
               :class="{'light-header' : !isDarkMode, 'dark-header' : isDarkMode}"
-            >
+            />
             <h3 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Notion</h3>
-            <p :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}">All-in-one workspace.</p>
+            <p :class="{'light' : isDarkMode, 'dark' : !isDarkMode}">All-in-one workspace.</p>
           </a>
         </transition>
         <transition appear appear-active-class="animated flipInX">
@@ -34,11 +34,9 @@
               src="@/assets/figma.png"
               class="card-header"
               :class="{'light-header' : !isDarkMode, 'dark-header' : isDarkMode}"
-            >
+            />
             <h3 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Figma</h3>
-            <p
-              :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}"
-            >Collaborative design tool.</p>
+            <p :class="{'light' : isDarkMode, 'dark' : !isDarkMode}">Collaborative design tool.</p>
           </a>
         </transition>
         <transition appear appear-active-class="animated flipInX">
@@ -47,11 +45,9 @@
               src="@/assets/contentful.png"
               class="card-header"
               :class="{'light-header' : !isDarkMode, 'dark-header' : isDarkMode}"
-            >
+            />
             <h3 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Contentful</h3>
-            <p
-              :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}"
-            >Content management system.</p>
+            <p :class="{'light' : isDarkMode, 'dark' : !isDarkMode}">Content management system.</p>
           </a>
         </transition>
         <transition appear appear-active-class="animated flipInX">
@@ -60,11 +56,9 @@
               src="@/assets/dropbox.png"
               class="card-header"
               :class="{'light-header' : !isDarkMode, 'dark-header' : isDarkMode}"
-            >
+            />
             <h3 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Dropbox</h3>
-            <p
-              :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}"
-            >Storage space in the cloud.</p>
+            <p :class="{'light' : isDarkMode, 'dark' : !isDarkMode}">Storage space in the cloud.</p>
           </a>
         </transition>
       </div>
@@ -73,15 +67,15 @@
 </template>
 
 <script>
- import Header from "@/components/Header.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   name: "Team",
   components: {
     Header
   },
- computed: {
-    isDarkMode() {
+  computed: {
+    isDarkmode() {
       return this.$store.getters.isDarkMode;
     }
   }
@@ -187,5 +181,11 @@ p {
   text-align: left;
   margin-left: 16px;
   margin-top: 0;
+}
+p.dark {
+  color: $Black;
+}
+p.light {
+  color: $White;
 }
 </style>
