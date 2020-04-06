@@ -6,23 +6,28 @@
       <img src="@/assets/logo.png" v-show="!isDarkMode" />
       <h4 :class="{'light-text': isDarkmode,
       'dark-text':!isDarkmode}">Sign in MyVue</h4>
+      <Notification v-if="hasText" :text="text" />
       <input
         type="email"
         placeholder="Email"
         :class="{'light-field':isDarkmode, 'dark-field':!isDarkmode}"
+        v-model="email"
+        required
       />
       <input
         type="password"
         placeholder="Password"
         :class="{'light-field':isDarkmode, 'dark-field':!isDarkmode}"
+        v-model="password"
+        required
       />
-      <button>Sign In</button>
+      <button v-on:click="onSubmit">Sign In</button>
 
       <router-link
         to="/Recover"
         :class="{'light-link':isDarkmode, 'dark-link':!isDarkmode}"
       >Forget your password</router-link>
-      <ThemeSwitch/>
+      <ThemeSwitch />
     </div>
   </div>
 </template>
@@ -30,11 +35,23 @@
 <script>
 import RequestAccount from "@/components/RequestAccount.vue";
 import ThemeSwitch from "@/components/ThemeSwitch.vue";
+import { auth } from "@/main";
+import Notification from "@/components/Notification.vue";
+
 export default {
   name: "SignIn",
   components: {
     RequestAccount,
-    ThemeSwitch
+    ThemeSwitch,
+    Notification
+  },
+  data() {
+    return {
+      email: null,
+      password: null,
+      hasText: false,
+      text: ""
+    };
   },
   computed: {
     isDarkmode() {
@@ -44,6 +61,28 @@ export default {
   methods: {
     toggleDarkMode() {
       this.$store.commit("toggleDarkMode");
+    },
+    onSubmit() {
+      const email = this.email;
+      const password = this.password;
+
+      auth
+        .login(email, password,true)
+        .then(response => {
+          this.$router.replace("/");
+          response;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
+  },
+  mounted() {
+    const params = this.$route.params;
+
+    if (params.userLoggedOut) {
+      this.hasText = true;
+      this.text = "You have logged out!";
     }
   }
 };
