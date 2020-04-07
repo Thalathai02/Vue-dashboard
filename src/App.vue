@@ -1,15 +1,13 @@
 <template>
-
   <div id="app" :class="{'light-background' : !isDarkMode, 'dark-background' : isDarkMode}">
     <router-view />
   </div>
 </template>
 <script>
-
-import "animate.css"
+import "animate.css";
 export default {
   name: "app",
-   computed: {
+  computed: {
     isDarkMode() {
       return this.$store.getters.isDarkMode;
     }
@@ -18,7 +16,6 @@ export default {
     const isDarkMode = this.$store.getters.isDarkMode;
     document.body.style.background = isDarkMode ? "#212c4f" : "#f8f9fa";
   }
-
 };
 </script>
 <style lang="scss" >
@@ -58,6 +55,7 @@ h4 {
 line,
 text {
   opacity: 0.2;
+
 }
 
 input {

@@ -75,7 +75,7 @@ export default {
     Header
   },
   computed: {
-    isDarkmode() {
+    isDarkMode() {
       return this.$store.getters.isDarkMode;
     }
   }
