@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import * as netlifyIdentityWidget from "netlify-identity-widget";
 import GoTrue from "gotrue-js";
-
+import VueFirestore from 'vue-firestore';
 Vue.config.productionTip = false;
 
 
@@ -15,6 +15,9 @@ export const auth = new GoTrue({
   setCookie: true
 })
 
+
+
+Vue.use(VueFirestore);
 
 new Vue({
   router,

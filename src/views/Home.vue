@@ -5,13 +5,20 @@
       <div class="spread">
         <h1 :class="{'dark' : !isDarkMode, 'light' : isDarkMode}">Traffic Overview</h1>
         <div class="toggle" :class="{'light-box' : isDarkMode, 'dark-box' : !isDarkMode}">
-          <div ref="days" class="days" v-on:click="toggleDays">Days</div>
-          <div ref="weeks" class="weeks" v-on:click="toggleWeeks">Weeks</div>
-          <div ref="months" class="months" v-on:click="toggleMonths">Months</div>
+          <div ref="days" class="days" @click="toggleDays">Days</div>
+          <div ref="weeks" class="weeks" @click="toggleWeeks">Weeks</div>
+          <div ref="months" class="months" @click="toggleMonths">Months</div>
         </div>
       </div>
-      <apexchart width="100%" type="area" :options="chartOptions" :series="series"></apexchart>
-      <iframe
+      <apexchart
+        class="chart1"
+        width="100%"
+        height="500px"
+        type="area"
+        :options="chartOptions"
+        :series="series"
+      ></apexchart>
+     <iframe
         v-if="isDarkMode"
         width="600"
         height="450"
@@ -20,7 +27,8 @@
         style="border:0"
         allowfullscreen
       ></iframe>
-      <iframe v-if="!isDarkMode"
+      <iframe
+        v-if="!isDarkMode"
         width="600"
         height="450"
         src="https://datastudio.google.com/embed/reporting/55f63b91-ea33-4bb9-8d02-fa341b63c92e/page/XfQLB"
@@ -33,20 +41,63 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Header from "@/components/Header.vue";
 import VueApexCharts from "vue-apexcharts";
+import Header from "@/components/Header.vue";
+import { db } from "@/firebase";
 
 export default {
-  name: "Home",
-  components: {
-    Header,
-    apexchart: VueApexCharts
-  },
+  name: "home",
   computed: {
     isDarkMode() {
       return this.$store.getters.isDarkMode;
     }
+  },
+  components: {
+    Header,
+    apexchart: VueApexCharts
+  },
+  firestore() {
+    return {
+      traffic: {
+        // collection reference.
+        ref: db.collection("traffic"),
+        // Bind the collection as an object if you would like to.
+        objects: true,
+        resolve: traffic => {
+          const todaysDate = new Date();
+          const lastWeekDate = todaysDate.setDate(todaysDate.getDate() - 7);
+
+          const activeUsers = [];
+          Object.keys(traffic.activeUsers).map(key => {
+            if (new Date(traffic.activeUsers[key][0]) > lastWeekDate) {
+              activeUsers.push(traffic.activeUsers[key]);
+            }
+          });
+
+          const newUsers = [];
+          Object.keys(traffic.newUsers).map(key => {
+            if (new Date(traffic.newUsers[key][0]) > lastWeekDate) {
+              newUsers.push(traffic.newUsers[key]);
+            }
+          });
+
+          this.series = [
+            {
+              name: "Active Users",
+              data: activeUsers
+            },
+            {
+              name: "New Users",
+              data: newUsers
+            }
+          ];
+        },
+        reject: err => {
+          // collection is rejected
+          console.log(err);
+        }
+      }
+    };
   },
   data() {
     return {
@@ -83,22 +134,7 @@ export default {
           type: "datetime"
         }
       },
-      series: [
-        {
-          name: "Active users",
-          data: [
-            [new Date("January 1, 2020"), 30],
-            [new Date("January 5, 2020"), 40]
-          ]
-        },
-        {
-          name: "New users",
-          data: [
-            [new Date("January 1, 2020"), 80],
-            [new Date("January 5, 2020"), 0]
-          ]
-        }
-      ]
+      series: []
     };
   },
   methods: {
@@ -114,6 +150,52 @@ export default {
       this.$refs.months.style.color = "#5b6175";
       this.$refs.months.style.background = "none";
       this.$refs.months.style.borderRadius = "none";
+
+      const activeUsers = [];
+      const newUsers = [];
+
+      // Binding Docs
+      this.$binding("activeUsers", db.collection("traffic").doc("activeUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastWeekDate = todaysDate.setDate(todaysDate.getDate() - 7);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastWeekDate) {
+              activeUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      // Binding Docs
+      this.$binding("newUsers", db.collection("traffic").doc("newUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastWeekDate = todaysDate.setDate(todaysDate.getDate() - 7);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastWeekDate) {
+              newUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      this.series = [
+        {
+          name: "active users",
+          data: activeUsers
+        },
+        {
+          name: "new users",
+          data: newUsers
+        }
+      ];
     },
     toggleWeeks() {
       this.$refs.weeks.style.color = "white";
@@ -127,6 +209,52 @@ export default {
       this.$refs.months.style.color = "#5b6175";
       this.$refs.months.style.background = "none";
       this.$refs.months.style.borderRadius = "none";
+
+      const activeUsers = [];
+      const newUsers = [];
+
+      // Binding Docs
+      this.$binding("activeUsers", db.collection("traffic").doc("activeUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastMonthDate = todaysDate.setDate(todaysDate.getDate() - 30);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastMonthDate) {
+              activeUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      // Binding Docs
+      this.$binding("newUsers", db.collection("traffic").doc("newUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastMonthDate = todaysDate.setDate(todaysDate.getDate() - 30);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastMonthDate) {
+              newUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      this.series = [
+        {
+          name: "active users",
+          data: activeUsers
+        },
+        {
+          name: "new users",
+          data: newUsers
+        }
+      ];
     },
     toggleMonths() {
       this.$refs.months.style.color = "white";
@@ -140,13 +268,59 @@ export default {
       this.$refs.weeks.style.color = "#5b6175";
       this.$refs.weeks.style.background = "none";
       this.$refs.weeks.style.borderRadius = "none";
+
+      const activeUsers = [];
+      const newUsers = [];
+
+      // Binding Docs
+      this.$binding("activeUsers", db.collection("traffic").doc("activeUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastYearDate = todaysDate.setDate(todaysDate.getDate() - 365);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastYearDate) {
+              activeUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      // Binding Docs
+      this.$binding("newUsers", db.collection("traffic").doc("newUsers"))
+        .then(data => {
+          const todaysDate = new Date();
+          const lastYearDate = todaysDate.setDate(todaysDate.getDate() - 365);
+
+          Object.keys(data).map(key => {
+            if (new Date(data[key][0]) > lastYearDate) {
+              newUsers.push(data[key]);
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      this.series = [
+        {
+          name: "active users",
+          data: activeUsers
+        },
+        {
+          name: "new users",
+          data: newUsers
+        }
+      ];
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-@import "@/global-styles/color.scss";
+      @import "@/global-styles/color.scss";
 @import "@/global-styles/Typography.scss";
 .container {
   padding-left: 15%;
@@ -158,16 +332,10 @@ export default {
   justify-content: space-between;
   margin-top: 40px;
   width: 100%;
-}
-@media all and (max-width: 767px) {
-  flex-direction: column;
-}
-h1.dark {
-  @include Heading-3($black);
-}
 
-h1.light {
-  @include Heading-3($white);
+  @media all and (max-width: 767px) {
+    flex-direction: column;
+  }
 }
 
 .toggle {
@@ -184,6 +352,7 @@ h1.light {
     cursor: pointer;
   }
 }
+
 @mixin toggle-settings {
   display: flex;
   justify-content: center;
@@ -192,6 +361,7 @@ h1.light {
   height: 100%;
   font-weight: 600;
 }
+
 .days {
   @include toggle-settings;
   background: $teal;
@@ -205,5 +375,27 @@ h1.light {
 
 .months {
   @include toggle-settings;
+}
+
+.chart1 {
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+
+.apexcharts-legend {
+  @media all and (max-width: 767px) {
+    display: none;
+  }
+}
+
+.gchart-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-bottom: 120px;
+
+  @media all and (max-width: 767px) {
+    display: none;
+  }
 }
 </style>

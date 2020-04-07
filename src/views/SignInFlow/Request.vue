@@ -1,24 +1,25 @@
 <template>
-  <div class="container" :class="{'light-background':!isDarkmode,'dark-background':isDarkmode}">
-    <RequestAccount />
-    <div class="Lonin">
-      <img src="@/assets/logo.png" v-show="isDarkMode" />
-      <img src="@/assets/logo.png" v-show="!isDarkMode" />
-      <h4 :class="{'light-text': isDarkmode,
-      'dark-text':!isDarkmode}">Request Account</h4>
-      <input
-        type="email"
-        placeholder="Email"
-        :class="{'light-field':isDarkmode, 'dark-field':!isDarkmode}"
-        v-model="email"
-        required
-      />
-
-      <button v-on:click="onSubmit">Request Email</button>
-
+  <div
+    class="container"
+    :class="{'light-background' : !isDarkMode, 'dark-background' : isDarkMode}"
+  >
+    <div class="request">
+      <img src="@/assets/DCHQ.svg" v-show="isDarkMode" />
+      <img src="@/assets/DCHQ-dark.svg" v-show="!isDarkMode" />
+      <h4 :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}">Request Account</h4>
+      <form @submit.prevent="onSubmit">
+        <input
+          type="email"
+          placeholder="Email"
+          :class="{'light-field' : isDarkMode, 'dark-field' : !isDarkMode}"
+          v-model="email"
+          required
+        />
+        <button>Request Account</button>
+      </form>
       <router-link
-        to="/SignIn"
-        :class="{'light-link':isDarkmode, 'dark-link':!isDarkmode}"
+        to="/signin"
+        :class="{'light-link': isDarkMode, 'dark-link' : !isDarkMode}"
       >Already have an account? Sign in now.</router-link>
       <ThemeSwitch />
     </div>
@@ -29,7 +30,7 @@
 import ThemeSwitch from "@/components/ThemeSwitch.vue";
 
 export default {
-  name: "Recover",
+  name: "Request",
   components: {
     ThemeSwitch
   },
@@ -39,16 +40,19 @@ export default {
     };
   },
   computed: {
-    isDarkmode() {
+    isDarkMode() {
       return this.$store.getters.isDarkMode;
     }
   },
   methods: {
     onSubmit() {
       const email = this.email;
+
+      // Slack API logic
       let slackURL = new URL("https://slack.com/api/chat.postMessage");
+
       const data = {
-        token: "xoxb-1039994723282-1050675299636-v3B8jizxvlQjvnx9v8SR0pW3",
+        token: "xoxb-1039994723282-1043582084338-DpncLzYP2csPmu6c4LxvPKe4",
         channel: "vue_account",
         text: `${email} has requested admin access to HQ. Please go to Netlify to invite them.`
       };
@@ -73,37 +77,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 @import "@/global-styles/color.scss";
 @import "@/global-styles/Typography.scss";
-.light-background {
-  background-color: $Light-Gray;
-}
-.dark-background {
-  background-color: $dark-blue;
-}
-.lighyt-text {
-  color: $White;
-}
-.dark-text {
-  color: $Black;
-}
-.light-field {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-  }
-}
-.dark-field {
-  background: rgba(198, 208, 235, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  color: black;
-  &::placeholder {
-    color: rgba(0, 0, 0, 0.2);
-  }
-}
 .container {
   display: flex;
   justify-content: center;
@@ -111,73 +87,11 @@ export default {
 
   min-height: 100vh;
 }
-.Lonin {
+
+.request {
   width: 400px;
-}
-.Request {
-  position: absolute;
-  top: 40px;
-  right: 40px;
-}
-.light-Request {
-  color: rgba(255, 255, 255, 0.3);
-  a {
-    color: white;
-  }
-}
-.dark-Request {
-  color: rgba(0, 0, 0, 0.3);
-  a {
-    color: black;
-  }
-}
-h4 {
-  line-height: 34px;
-  font-size: 24px;
-  color: #ffffff;
-}
-input {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-sizing: border-box;
-  border-radius: 4px;
-
-  height: 60px;
-  width: 100%;
-
-  font-size: 24px;
-  color: white;
-  padding-left: 20px;
-  margin-top: 20px;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-  }
-}
-button {
-  background: #56ccf2;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-
-  height: 60px;
-  width: 100%;
-
-  font-size: 20px;
-  color: white;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-a {
-  line-height: 25px;
-  font-size: 16px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.3);
-  text-decoration: none;
-}
-.light-link {
-  color: rgba(255, 255, 255, 0.3);
-}
-.dark-link {
-  color: rgba(0, 0, 0, 0.3);
+  margin-left: 16px;
+  margin-right: 16px;
 }
 </style>
