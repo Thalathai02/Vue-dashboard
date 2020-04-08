@@ -4,8 +4,8 @@
     :class="{'light-background' : !isDarkMode, 'dark-background' : isDarkMode}"
   >
     <div class="request">
-      <img src="@/assets/DCHQ.svg" v-show="isDarkMode" />
-      <img src="@/assets/DCHQ-dark.svg" v-show="!isDarkMode" />
+     <img src="@/assets/logoLight.png" v-show="isDarkMode">
+      <img src="@/assets/logo.png" v-show="!isDarkMode">
       <h4 :class="{'light-text' : isDarkMode, 'dark-text' : !isDarkMode}">Request Account</h4>
       <form @submit.prevent="onSubmit">
         <input

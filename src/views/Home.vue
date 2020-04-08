@@ -115,6 +115,7 @@ export default {
         tooltip: {
           theme: "dark"
         },
+        
         grid: {
           xaxis: {
             lines: {
@@ -123,7 +124,7 @@ export default {
           },
           yaxis: {
             lines: {
-              show: false
+              show: true
             }
           }
         },
@@ -134,7 +135,7 @@ export default {
           type: "datetime"
         }
       },
-      series: []
+      series: [],
     };
   },
   methods: {
